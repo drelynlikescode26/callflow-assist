@@ -1,0 +1,171 @@
+{
+  "states": {
+    "opening": {
+      "id": "opening",
+      "script": "Hi! I'm calling from AT&T. We have some great new offers in your area. Do you have a moment to talk?",
+      "options": [
+        {
+          "text": "Yes",
+          "next": "service_type"
+        },
+        {
+          "text": "Not interested",
+          "next": "polite_close"
+        },
+        {
+          "text": "Maybe later",
+          "next": "callback_offer"
+        }
+      ]
+    },
+    "service_type": {
+      "id": "service_type",
+      "script": "Great! Are you currently interested in Internet, TV, or Mobile services?",
+      "options": [
+        {
+          "text": "Internet",
+          "next": "age_check"
+        },
+        {
+          "text": "TV",
+          "next": "age_check"
+        },
+        {
+          "text": "Mobile",
+          "next": "age_check"
+        },
+        {
+          "text": "All of them",
+          "next": "age_check"
+        }
+      ]
+    },
+    "age_check": {
+      "id": "age_check",
+      "script": "Perfect! Are you or anyone in your household 55 or older? We have special discounts for seniors.",
+      "options": [
+        {
+          "text": "Yes",
+          "next": "senior_offer"
+        },
+        {
+          "text": "No",
+          "next": "standard_offer"
+        }
+      ]
+    },
+    "senior_offer": {
+      "id": "senior_offer",
+      "script": "Excellent! You qualify for our senior discount. I'd love to show you these exclusive deals in person. Can I book you for a quick visit to our store?",
+      "options": [
+        {
+          "text": "Yes, book visit",
+          "next": "close_success"
+        },
+        {
+          "text": "Tell me more first",
+          "next": "more_info_senior"
+        },
+        {
+          "text": "Not right now",
+          "next": "callback_offer"
+        }
+      ]
+    },
+    "standard_offer": {
+      "id": "standard_offer",
+      "script": "Great! We have some fantastic bundles available. I can walk you through all the options at our store. Would you like to schedule a quick visit?",
+      "options": [
+        {
+          "text": "Yes, book visit",
+          "next": "close_success"
+        },
+        {
+          "text": "Tell me more first",
+          "next": "more_info_standard"
+        },
+        {
+          "text": "Not right now",
+          "next": "callback_offer"
+        }
+      ]
+    },
+    "more_info_senior": {
+      "id": "more_info_senior",
+      "script": "With our senior discount, you can save up to $30/month on unlimited plans. Plus, we waive activation fees. Can I get you scheduled for a store visit this week?",
+      "options": [
+        {
+          "text": "Yes, book visit",
+          "next": "close_success"
+        },
+        {
+          "text": "Maybe next week",
+          "next": "callback_offer"
+        }
+      ]
+    },
+    "more_info_standard": {
+      "id": "more_info_standard",
+      "script": "Our bundles include fiber internet up to 5 Gig speeds, premium TV channels, and unlimited mobile data. Let's discuss the best fit for you at our store. Can I book you in?",
+      "options": [
+        {
+          "text": "Yes, book visit",
+          "next": "close_success"
+        },
+        {
+          "text": "Maybe next week",
+          "next": "callback_offer"
+        }
+      ]
+    },
+    "close_success": {
+      "id": "close_success",
+      "script": "Perfect! I'll get you scheduled. Our team will reach out within 24 hours to confirm your appointment. Thank you for choosing AT&T!",
+      "options": [
+        {
+          "text": "Start New Call",
+          "next": "opening"
+        }
+      ]
+    },
+    "callback_offer": {
+      "id": "callback_offer",
+      "script": "No problem! Can I call you back at a better time? We'd love to help you save on your services.",
+      "options": [
+        {
+          "text": "Yes, call back later",
+          "next": "close_callback"
+        },
+        {
+          "text": "Actually, let's book now",
+          "next": "close_success"
+        },
+        {
+          "text": "No thanks",
+          "next": "polite_close"
+        }
+      ]
+    },
+    "close_callback": {
+      "id": "close_callback",
+      "script": "Great! We'll follow up with you soon. Have a wonderful day!",
+      "options": [
+        {
+          "text": "Start New Call",
+          "next": "opening"
+        }
+      ]
+    },
+    "polite_close": {
+      "id": "polite_close",
+      "script": "I understand. If you change your mind, we're here to help. Have a great day!",
+      "options": [
+        {
+          "text": "Start New Call",
+          "next": "opening"
+        }
+      ]
+    }
+  },
+  "startState": "opening"
+}
