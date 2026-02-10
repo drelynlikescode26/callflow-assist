@@ -403,6 +403,7 @@ class CallFlowAssistant {
             script = script.replace(/\{\{PHONE_NUMBER\}\}/g, this.callFlowData.config.phoneNumber || '[Your Phone Number]');
             script = script.replace(/\{\{STORE_NAME\}\}/g, this.callFlowData.config.storeName || 'AT&T');
             script = script.replace(/\{\{STORE_LOCATION\}\}/g, this.callFlowData.config.storeLocation || '[Store Location]');
+            script = script.replace(/\{\{FIBER_PROMO_PRICE\}\}/g, this.callFlowData.config.fiberPromoPrice || '$29/month');
         }
         
         // Handle dynamic content based on lead type
