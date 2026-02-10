@@ -1,4 +1,9 @@
 {
+  "config": {
+    "phoneNumber": "[Your Phone Number]",
+    "storeName": "AT&T on Highway 29",
+    "storeLocation": "Highway 29"
+  },
   "pricing": {
     "wireless": {
       "perLine": "$35–$65/line",
@@ -34,10 +39,10 @@
   },
   "templates": {
     "appointment": {
-      "default": "Great! Just stop by the AT&T store and ask for {{REP_NAME}}. We're located at [Store Address]. Mention this call and we'll get you set up with all the offers we discussed."
+      "default": "Great! Just stop by {{STORE_NAME}} and ask for {{REP_NAME}}. Mention this call and we'll get you set up with all the offers we discussed."
     },
     "voicemail": {
-      "default": "Hi {{CUSTOMER_NAME}}, this is {{REP_NAME}} with AT&T. I'm calling about some exclusive offers available in your area for {{LEAD_TYPE}}. Give me a call back at [Your Number] when you get a chance. Looking forward to talking with you!"
+      "default": "Hi {{CUSTOMER_NAME}}, this is {{REP_NAME}} with AT&T. I'm calling about some exclusive offers available in your area for {{LEAD_TYPE}}. Give me a call back at {{PHONE_NUMBER}} when you get a chance. Looking forward to talking with you!"
     }
   },
   "nodes": {
@@ -48,11 +53,47 @@
       "options": [
         {
           "text": "✅ Yes, good time",
-          "next": "value_intro"
+          "next": "check_promo_type"
         },
         {
           "text": "❌ Not a good time",
           "next": "reschedule"
+        }
+      ]
+    },
+    "check_promo_type": {
+      "id": "check_promo_type",
+      "script": "",
+      "type": "router",
+      "options": []
+    },
+    "upgrades_vga_promo": {
+      "id": "upgrades_vga_promo",
+      "script": "Good afternoon, this is {{REP_NAME}} with {{STORE_NAME}}. I'm calling because you're eligible for our current equipment promos. We have the iPhone 16E as low as $1.99 on upgrades and free with new lines, plus the iPhone Air free on new lines and upgrades. Inventory moves fast, so I wanted to make sure you had a shot before it shifts.",
+      "type": "promo",
+      "options": [
+        {
+          "text": "Continue",
+          "next": "interest_details"
+        },
+        {
+          "text": "Skip",
+          "next": "value_intro"
+        }
+      ]
+    },
+    "fiber_eligibility_promo": {
+      "id": "fiber_eligibility_promo",
+      "script": "Good afternoon, this is {{REP_NAME}} with {{STORE_NAME}}. I'm calling to let you know your address is now fiber-eligible. Plans can start around $29/month for eligible customers, with no contracts and no price hikes.",
+      "type": "promo",
+      "options": [
+        {
+          "text": "Continue",
+          "next": "interest_details"
+        },
+        {
+          "text": "Skip",
+          "next": "value_intro"
         }
       ]
     },
@@ -105,7 +146,7 @@
         "fiber": "We're bringing high-speed fiber internet to your neighborhood. {{55PLUS_FIBER}} You get symmetrical speeds — same fast upload as download — perfect for working from home or streaming.",
         "both": "We have bundle deals that combine our unlimited wireless service with fiber internet. {{55PLUS_WIRELESS}} You'll get the best pricing and the convenience of one bill for everything.",
         "upgrades": "I see you're eligible for an upgrade. {{UPGRADE_DETAILS}} We're making it easy to get the latest device without the usual upfront cost.",
-        "unknown": "We have offers on both wireless service and fiber internet. Let me ask — what would be most valuable to you right now: mobile service or home internet?"
+        "vga": "We have great opportunities for new wireless lines right now. {{UPGRADE_INFO}} You get the latest devices with excellent promotional pricing and the reliability of AT&T's nationwide network."
       },
       "options": [
         {
@@ -135,7 +176,7 @@
         "fiber": "Fiber gives you consistent speeds even during peak hours. Whether you're on video calls, streaming 4K, or gaming — everyone in your house stays connected without slowdowns.",
         "both": "With a bundle, you get our best pricing. Your family stays connected on the go and at home, all on AT&T's reliable network. Plus you simplify billing to one account.",
         "upgrades": "{{UPGRADE_DETAILS}} You can trade in your current device and walk out with the latest tech. We handle the transfer and setup — makes it easy.",
-        "unknown": "We have flexible options for whatever fits your needs best. Would wireless service or home internet be more valuable to you right now?"
+        "vga": "{{UPGRADE_DETAILS}} New lines get the best promotional pricing. You get the latest devices and AT&T's reliable network with all the perks included."
       },
       "options": [
         {
@@ -305,32 +346,6 @@
       "script": "No problem at all. Have a great day, {{CUSTOMER_NAME}}!",
       "type": "close",
       "options": []
-    },
-    "unknown_qualifier": {
-      "id": "unknown_qualifier",
-      "script": "To give you the best information, are you more interested in mobile service, home internet, or both?",
-      "type": "qualifier",
-      "options": [
-        {
-          "text": "Mobile/Wireless",
-          "next": "lead_specific_pitch",
-          "updateContext": {"leadType": "wireless"}
-        },
-        {
-          "text": "Home Internet/Fiber",
-          "next": "lead_specific_pitch",
-          "updateContext": {"leadType": "fiber"}
-        },
-        {
-          "text": "Both",
-          "next": "lead_specific_pitch",
-          "updateContext": {"leadType": "both"}
-        },
-        {
-          "text": "Just browsing",
-          "next": "soft_close"
-        }
-      ]
     },
     "upgrade_device_qualifier": {
       "id": "upgrade_device_qualifier",

@@ -132,6 +132,7 @@ class CallFlowAssistant {
                 // Show/hide upgrade type section based on lead type
                 if (this.context.leadType === 'wireless' || 
                     this.context.leadType === 'upgrades' ||
+                    this.context.leadType === 'vga' ||
                     this.context.leadType === 'both') {
                     upgradeSection.style.display = 'block';
                 } else {
@@ -300,11 +301,20 @@ class CallFlowAssistant {
     }
 
     navigateToNode(nodeId) {
-        // Handle special navigation
-        if (nodeId === 'lead_specific_pitch' && this.context.leadType === 'unknown') {
-            nodeId = 'unknown_qualifier';
+        // Handle special navigation for promo routing
+        if (nodeId === 'check_promo_type') {
+            // Route to appropriate promo based on lead type
+            if (this.context.leadType === 'upgrades' || this.context.leadType === 'vga') {
+                nodeId = 'upgrades_vga_promo';
+            } else if (this.context.leadType === 'fiber' || this.context.leadType === 'both') {
+                nodeId = 'fiber_eligibility_promo';
+            } else {
+                // For wireless only, skip promo and go to value_intro
+                nodeId = 'value_intro';
+            }
         }
         
+        // Handle special navigation for upgrades without upgrade type
         if (nodeId === 'lead_specific_pitch' && this.context.leadType === 'upgrades' && !this.context.upgradeType) {
             nodeId = 'upgrade_device_qualifier';
         }
@@ -388,6 +398,13 @@ class CallFlowAssistant {
         script = script.replace(/\{\{CUSTOMER_NAME\}\}/g, this.context.customerName || 'there');
         script = script.replace(/\{\{REP_NAME\}\}/g, this.context.repName);
         
+        // Replace config placeholders (phone number, store name, store location)
+        if (this.callFlowData.config) {
+            script = script.replace(/\{\{PHONE_NUMBER\}\}/g, this.callFlowData.config.phoneNumber || '[Your Phone Number]');
+            script = script.replace(/\{\{STORE_NAME\}\}/g, this.callFlowData.config.storeName || 'AT&T');
+            script = script.replace(/\{\{STORE_LOCATION\}\}/g, this.callFlowData.config.storeLocation || '[Store Location]');
+        }
+        
         // Handle dynamic content based on lead type
         if (node.dynamicContent && this.context.leadType) {
             const leadType = this.context.leadType;
@@ -467,7 +484,7 @@ class CallFlowAssistant {
                 'fiber': 'Fiber Internet',
                 'both': 'Wireless + Fiber Bundle',
                 'upgrades': 'Device Upgrade',
-                'unknown': 'General Inquiry'
+                'vga': 'VGA (New Wireless Line)'
             };
             parts.push(`Interest: ${leadTypeMap[this.context.leadType]}`);
         }
@@ -694,7 +711,7 @@ class CallFlowAssistant {
                 'fiber': 'Fiber Internet',
                 'both': 'Wireless + Fiber Bundle',
                 'upgrades': 'Device Upgrade',
-                'unknown': 'General Inquiry'
+                'vga': 'VGA (New Wireless Line)'
             };
             summaryHTML += `
                 <div class="summary-item">
@@ -773,7 +790,7 @@ class CallFlowAssistant {
             'fiber': 'Fiber',
             'both': 'Wireless + Fiber',
             'upgrades': 'Upgrade',
-            'unknown': 'General'
+            'vga': 'VGA'
         };
         
         let summary = `CALL SUMMARY - ${outcomeLabels[this.context.outcome]}\n`;
@@ -849,12 +866,14 @@ class CallFlowAssistant {
             'fiber': 'fiber internet',
             'both': 'wireless and fiber services',
             'upgrades': 'device upgrades',
-            'unknown': 'our current offers'
+            'vga': 'new wireless line opportunities'
         };
+        
+        const phoneNumber = this.callFlowData.config?.phoneNumber || '[Your Number]';
         
         let template = `Hi ${customerName}, this is ${this.context.repName} with AT&T. `;
         template += `I'm calling about some exclusive offers we have available for ${leadTypeMap[this.context.leadType] || 'AT&T services'}. `;
-        template += `Give me a call back when you get a chance, or feel free to stop by our store and ask for me. `;
+        template += `Give me a call back at ${phoneNumber} when you get a chance, or feel free to stop by our store and ask for me. `;
         template += `Looking forward to talking with you!`;
         
         textarea.value = template;
