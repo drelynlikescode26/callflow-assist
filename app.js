@@ -1,5 +1,11 @@
 // Call Flow Assistant - Main Application Logic
 class CallFlowAssistant {
+    // Animation constants
+    static BUTTON_ANIMATION_DELAY = 100; // milliseconds per button
+    static BUTTON_ANIMATION_OFFSET = 10; // pixels
+    static NAVIGATION_DELAY_MS = 200;
+    static SCRIPT_TRANSITION_DELAY = 150;
+
     constructor() {
         this.callFlowData = null;
         this.currentState = null;
@@ -108,7 +114,7 @@ class CallFlowAssistant {
         setTimeout(() => {
             scriptTextEl.textContent = this.currentState.script;
             scriptTextEl.style.opacity = '1';
-        }, 150);
+        }, CallFlowAssistant.SCRIPT_TRANSITION_DELAY);
     }
 
     updateOptions() {
@@ -133,12 +139,12 @@ class CallFlowAssistant {
         
         // Add slight stagger to button appearance
         button.style.opacity = '0';
-        button.style.transform = 'translateY(10px)';
+        button.style.transform = `translateY(${CallFlowAssistant.BUTTON_ANIMATION_OFFSET}px)`;
         setTimeout(() => {
             button.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
             button.style.opacity = '1';
             button.style.transform = 'translateY(0)';
-        }, 100 * index);
+        }, CallFlowAssistant.BUTTON_ANIMATION_DELAY * index);
         
         button.addEventListener('click', () => {
             this.handleOptionClick(option.next);
@@ -159,7 +165,7 @@ class CallFlowAssistant {
         
         setTimeout(() => {
             this.navigateToState(nextStateId);
-        }, 200);
+        }, CallFlowAssistant.NAVIGATION_DELAY_MS);
     }
 
     resetCall() {
