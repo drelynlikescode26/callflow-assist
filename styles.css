@@ -70,6 +70,15 @@ header h1 {
     gap: 0.5rem;
 }
 
+.button-group.three-column {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.required {
+    color: #dc3545;
+    font-weight: bold;
+}
+
 .setup-btn {
     padding: 0.875rem;
     font-size: 1rem;
@@ -394,6 +403,116 @@ footer {
     }
     
     .button-group {
+        grid-template-columns: 1fr;
+    }
+    
+    .button-group.three-column {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Outcome Selection Styles */
+.outcome-selection {
+    margin-bottom: 1.5rem;
+}
+
+.outcome-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+}
+
+.outcome-btn {
+    padding: 0.875rem;
+    font-size: 1rem;
+    border: 2px solid #ddd;
+    background: white;
+    color: #333;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: 500;
+    text-align: center;
+}
+
+.outcome-btn:hover {
+    border-color: #00b4db;
+    color: #00b4db;
+}
+
+.outcome-btn.selected {
+    background: #00b4db;
+    color: white;
+    border-color: #00b4db;
+}
+
+/* Callback Scheduler */
+.callback-scheduler {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.callback-time-btn {
+    font-size: 0.95rem;
+}
+
+/* Copy Templates */
+.copy-templates {
+    margin-top: 1.5rem;
+}
+
+.template-section {
+    margin-bottom: 1.5rem;
+}
+
+.template-label {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 0.5rem;
+}
+
+.copy-textarea {
+    width: 100%;
+    padding: 0.875rem;
+    font-size: 0.9rem;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-family: 'Courier New', monospace;
+    background: #f8f9fa;
+    resize: vertical;
+    line-height: 1.5;
+}
+
+.copy-btn {
+    width: 100%;
+    padding: 0.75rem;
+    margin-top: 0.5rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.copy-btn:hover {
+    background: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+.copy-btn.copied {
+    background: #6c757d;
+}
+
+@media (max-width: 480px) {
+    .outcome-buttons {
         grid-template-columns: 1fr;
     }
 }

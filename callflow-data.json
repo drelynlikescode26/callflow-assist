@@ -1,40 +1,57 @@
 {
   "pricing": {
     "wireless": {
-      "perLine": "$35–$40/line",
-      "description": "Unlimited talk, text, and data"
+      "perLine": "$35–$65/line",
+      "description": "Unlimited talk, text, and data. Prices vary by plan tier and number of lines.",
+      "estimate": "Pricing depends on number of lines and plan features. Trade-ins and promotions may lower costs."
     },
     "fiber": {
-      "starting": "$55+",
-      "description": "High-speed fiber internet"
+      "starting": "$55–$180/month",
+      "description": "High-speed fiber internet with symmetrical upload/download speeds.",
+      "estimate": "Final price varies based on speed tier (300 Mbps to 5 Gig). Installation fees may apply or be waived with promotions."
     },
     "upgrades": {
-      "iphone": "Get the latest iPhone with up to $800 off with eligible trade-in",
-      "android": "Get the latest Galaxy or Pixel with up to $800 off with eligible trade-in"
+      "iphone": "Get the latest iPhone 15 with up to $1000 off with eligible trade-in and qualifying unlimited plan",
+      "android": "Get the latest Samsung Galaxy or Google Pixel with up to $1000 off with eligible trade-in and qualifying unlimited plan"
+    },
+    "bundle": {
+      "description": "Bundle wireless and fiber for best pricing. Exact savings depend on plan configuration.",
+      "estimate": "Combined savings typically $10-$30/month versus separate services."
     }
   },
   "conditionalInserts": {
     "55plus": {
-      "wireless": "Plus, with our 55+ plan, you save an extra $10/month per line.",
-      "fiber": "And as a 55+ customer, you qualify for waived installation fees."
+      "wireless": "Plus, with our 55+ plan, you save an extra $10/month per line — that's a great value for unlimited everything.",
+      "fiber": "And as a 55+ customer, you qualify for waived installation fees, saving you up to $99."
     },
     "upgrade": {
-      "eligible": "You're eligible for our current upgrade promotion!",
-      "notSure": "Let's check your upgrade eligibility when you visit."
+      "eligible": "You're eligible for our current upgrade promotion with trade-in!",
+      "notSure": "We can check your upgrade eligibility when you visit — no obligation."
+    },
+    "eventSale": {
+      "mobile": "Since this is an event sale, I can actually come to you if that's easier — saves you the trip!"
+    }
+  },
+  "templates": {
+    "appointment": {
+      "default": "Great! Just stop by the AT&T store and ask for {{REP_NAME}}. We're located at [Store Address]. Mention this call and we'll get you set up with all the offers we discussed."
+    },
+    "voicemail": {
+      "default": "Hi {{CUSTOMER_NAME}}, this is {{REP_NAME}} with AT&T. I'm calling about some exclusive offers available in your area for {{LEAD_TYPE}}. Give me a call back at [Your Number] when you get a chance. Looking forward to talking with you!"
     }
   },
   "nodes": {
     "permission_check": {
       "id": "permission_check",
-      "script": "Did I catch you at a good time?",
+      "script": "Hey {{CUSTOMER_NAME}}, this is {{REP_NAME}} with AT&T — did I catch you at a good time?",
       "type": "permission",
       "options": [
         {
-          "text": "Yes, I have a moment",
+          "text": "✅ Yes, good time",
           "next": "value_intro"
         },
         {
-          "text": "Not really",
+          "text": "❌ Not a good time",
           "next": "reschedule"
         }
       ]
@@ -46,15 +63,18 @@
       "options": [
         {
           "text": "Later today",
-          "next": "reschedule_confirm"
+          "next": "reschedule_confirm",
+          "updateContext": {"rescheduleTime": "later_today"}
         },
         {
           "text": "Tomorrow",
-          "next": "reschedule_confirm"
+          "next": "reschedule_confirm",
+          "updateContext": {"rescheduleTime": "tomorrow"}
         },
         {
           "text": "This weekend",
-          "next": "reschedule_confirm"
+          "next": "reschedule_confirm",
+          "updateContext": {"rescheduleTime": "weekend"}
         }
       ]
     },
@@ -68,7 +88,6 @@
       "id": "value_intro",
       "script": "Great! I'm reaching out because AT&T has some exclusive offers available in your area right now.",
       "type": "intro",
-      "requiresContext": true,
       "options": [
         {
           "text": "Continue",
@@ -82,23 +101,27 @@
       "type": "pitch",
       "requiresContext": true,
       "dynamicContent": {
-        "wireless": "I wanted to share our wireless plans starting at just {{WIRELESS_PRICE}} with unlimited everything. {{55PLUS_WIRELESS}} {{UPGRADE_INFO}}",
-        "fiber": "We're offering high-speed fiber internet starting at {{FIBER_PRICE}}. {{55PLUS_FIBER}}",
-        "both": "We have great bundle deals combining wireless and fiber — unlimited mobile service plus blazing-fast home internet. {{55PLUS_WIRELESS}}",
-        "unknown": "We have fantastic offers on both wireless service and fiber internet. Let me ask — are you more interested in mobile or home internet right now?"
+        "wireless": "We're offering unlimited wireless plans with nationwide coverage. {{55PLUS_WIRELESS}} {{UPGRADE_INFO}} The value is really in the reliability and coverage you get with AT&T.",
+        "fiber": "We're bringing high-speed fiber internet to your neighborhood. {{55PLUS_FIBER}} You get symmetrical speeds — same fast upload as download — perfect for working from home or streaming.",
+        "both": "We have bundle deals that combine our unlimited wireless service with fiber internet. {{55PLUS_WIRELESS}} You'll get the best pricing and the convenience of one bill for everything.",
+        "upgrades": "I see you're eligible for an upgrade. {{UPGRADE_DETAILS}} We're making it easy to get the latest device without the usual upfront cost.",
+        "unknown": "We have offers on both wireless service and fiber internet. Let me ask — what would be most valuable to you right now: mobile service or home internet?"
       },
       "options": [
         {
-          "text": "Interested",
-          "next": "interest_confirm"
+          "text": "😊 Interested",
+          "next": "interest_details",
+          "updateContext": {"interestLevel": "interested"}
         },
         {
-          "text": "Maybe, tell me more",
-          "next": "more_details"
+          "text": "🤔 Maybe, tell me more",
+          "next": "more_details",
+          "updateContext": {"interestLevel": "maybe"}
         },
         {
-          "text": "Not right now",
-          "next": "soft_close"
+          "text": "⏰ Not right now",
+          "next": "soft_close",
+          "updateContext": {"interestLevel": "not_now"}
         }
       ]
     },
@@ -108,34 +131,42 @@
       "type": "details",
       "requiresContext": true,
       "dynamicContent": {
-        "wireless": "Our unlimited plans include premium data, mobile hotspot, and talk/text to Mexico and Canada. {{UPGRADE_DETAILS}}",
-        "fiber": "Our fiber internet delivers symmetrical upload and download speeds — perfect for working from home, streaming, and gaming all at once.",
-        "both": "You'd get our best pricing with a bundle — unlimited mobile for the whole family plus fiber internet that can handle everything.",
-        "unknown": "We have flexible options for whatever you need. Would wireless or home internet be more valuable to you right now?"
+        "wireless": "Our unlimited plans include premium data, mobile hotspot, and talk/text to Mexico and Canada at no extra charge. {{UPGRADE_DETAILS}} It's really about staying connected everywhere you go.",
+        "fiber": "Fiber gives you consistent speeds even during peak hours. Whether you're on video calls, streaming 4K, or gaming — everyone in your house stays connected without slowdowns.",
+        "both": "With a bundle, you get our best pricing. Your family stays connected on the go and at home, all on AT&T's reliable network. Plus you simplify billing to one account.",
+        "upgrades": "{{UPGRADE_DETAILS}} You can trade in your current device and walk out with the latest tech. We handle the transfer and setup — makes it easy.",
+        "unknown": "We have flexible options for whatever fits your needs best. Would wireless service or home internet be more valuable to you right now?"
       },
       "options": [
         {
-          "text": "Sounds good",
-          "next": "interest_confirm"
+          "text": "👍 Sounds good",
+          "next": "interest_details",
+          "updateContext": {"interestLevel": "interested"}
         },
         {
-          "text": "Maybe later",
-          "next": "soft_close"
+          "text": "📞 Maybe later",
+          "next": "callback_offer",
+          "updateContext": {"interestLevel": "callback"}
         }
       ]
     },
-    "interest_confirm": {
-      "id": "interest_confirm",
-      "script": "Awesome! The best way to lock in these offers is to stop by our store. We'll make sure you get all the current deals.",
+    "interest_details": {
+      "id": "interest_details",
+      "script": "Awesome! The best way to get all the current deals and see your specific options is to come by the store. We'll sit down, pull all the numbers, and make sure you get everything you qualify for. No pressure — just want to make sure you get the best value.",
       "type": "transition",
       "options": [
         {
-          "text": "Let's schedule it",
+          "text": "Let's schedule a visit",
           "next": "store_close"
         },
         {
+          "text": "{{EVENT_OPTION}}",
+          "next": "event_sale_option",
+          "conditional": "eventSale"
+        },
+        {
           "text": "I need to think about it",
-          "next": "soft_close"
+          "next": "callback_offer"
         }
       ]
     },
@@ -146,23 +177,112 @@
       "options": [
         {
           "text": "Today",
-          "next": "confirm_appointment"
+          "next": "confirm_appointment",
+          "updateContext": {"appointmentTime": "today"}
         },
         {
           "text": "Tomorrow",
-          "next": "confirm_appointment"
+          "next": "confirm_appointment",
+          "updateContext": {"appointmentTime": "tomorrow"}
+        },
+        {
+          "text": "Next week",
+          "next": "confirm_appointment",
+          "updateContext": {"appointmentTime": "next_week"}
         },
         {
           "text": "This weekend",
-          "next": "confirm_appointment"
+          "next": "confirm_appointment",
+          "updateContext": {"appointmentTime": "weekend"}
+        }
+      ]
+    },
+    "event_sale_option": {
+      "id": "event_sale_option",
+      "script": "Since I'm doing event sales this week, I can actually come to you if that's more convenient. Would you prefer a home visit or coming to the store?",
+      "type": "transition",
+      "options": [
+        {
+          "text": "Come to me",
+          "next": "mobile_visit_confirm",
+          "updateContext": {"visitType": "mobile"}
+        },
+        {
+          "text": "I'll come to the store",
+          "next": "store_close"
+        }
+      ]
+    },
+    "mobile_visit_confirm": {
+      "id": "mobile_visit_confirm",
+      "script": "Great! I can swing by your place. What day works best for you?",
+      "type": "close",
+      "options": [
+        {
+          "text": "Today",
+          "next": "confirm_appointment",
+          "updateContext": {"appointmentTime": "today", "visitType": "mobile"}
+        },
+        {
+          "text": "Tomorrow",
+          "next": "confirm_appointment",
+          "updateContext": {"appointmentTime": "tomorrow", "visitType": "mobile"}
+        },
+        {
+          "text": "This weekend",
+          "next": "confirm_appointment",
+          "updateContext": {"appointmentTime": "weekend", "visitType": "mobile"}
         }
       ]
     },
     "confirm_appointment": {
       "id": "confirm_appointment",
-      "script": "Excellent! When you come in, just ask for Drelyn and mention this conversation. We'll take care of you and make sure you get all the offers we discussed. {{SUMMARY}}",
+      "script": "Excellent! {{VISIT_DETAILS}} When you {{VISIT_ACTION}}, just ask for {{REP_NAME}} and mention this conversation. I'll make sure you get all the offers we discussed. {{SUMMARY}}",
       "type": "success",
       "requiresContext": true,
+      "options": []
+    },
+    "callback_offer": {
+      "id": "callback_offer",
+      "script": "I totally understand. Would you like me to give you a call back in a few days to answer any questions?",
+      "type": "transition",
+      "options": [
+        {
+          "text": "Yes, call me back",
+          "next": "callback_schedule"
+        },
+        {
+          "text": "No, I'll reach out",
+          "next": "soft_close"
+        }
+      ]
+    },
+    "callback_schedule": {
+      "id": "callback_schedule",
+      "script": "Perfect! When would be a good time for me to follow up?",
+      "type": "close",
+      "options": [
+        {
+          "text": "Later today",
+          "next": "callback_confirm",
+          "updateContext": {"callbackTime": "later_today"}
+        },
+        {
+          "text": "Tomorrow",
+          "next": "callback_confirm",
+          "updateContext": {"callbackTime": "tomorrow"}
+        },
+        {
+          "text": "This weekend",
+          "next": "callback_confirm",
+          "updateContext": {"callbackTime": "weekend"}
+        }
+      ]
+    },
+    "callback_confirm": {
+      "id": "callback_confirm",
+      "script": "Great! I'll give you a call back then. If anything changes or you have questions before then, feel free to stop by the store anytime. Have a great day!",
+      "type": "close",
       "options": []
     },
     "soft_close": {
@@ -182,22 +302,22 @@
     },
     "polite_close": {
       "id": "polite_close",
-      "script": "No problem at all. Have a great day!",
+      "script": "No problem at all. Have a great day, {{CUSTOMER_NAME}}!",
       "type": "close",
       "options": []
     },
     "unknown_qualifier": {
       "id": "unknown_qualifier",
-      "script": "To give you the best info, are you more interested in wireless service or home internet?",
+      "script": "To give you the best information, are you more interested in mobile service, home internet, or both?",
       "type": "qualifier",
       "options": [
         {
-          "text": "Wireless",
+          "text": "Mobile/Wireless",
           "next": "lead_specific_pitch",
           "updateContext": {"leadType": "wireless"}
         },
         {
-          "text": "Fiber Internet",
+          "text": "Home Internet/Fiber",
           "next": "lead_specific_pitch",
           "updateContext": {"leadType": "fiber"}
         },
@@ -205,6 +325,32 @@
           "text": "Both",
           "next": "lead_specific_pitch",
           "updateContext": {"leadType": "both"}
+        },
+        {
+          "text": "Just browsing",
+          "next": "soft_close"
+        }
+      ]
+    },
+    "upgrade_device_qualifier": {
+      "id": "upgrade_device_qualifier",
+      "script": "Are you looking at iPhone or Android devices?",
+      "type": "qualifier",
+      "options": [
+        {
+          "text": "iPhone",
+          "next": "lead_specific_pitch",
+          "updateContext": {"upgradeType": "iphone"}
+        },
+        {
+          "text": "Android",
+          "next": "lead_specific_pitch",
+          "updateContext": {"upgradeType": "android"}
+        },
+        {
+          "text": "Not sure yet",
+          "next": "lead_specific_pitch",
+          "updateContext": {"upgradeType": "not_sure"}
         }
       ]
     }
