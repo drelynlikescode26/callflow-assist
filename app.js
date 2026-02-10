@@ -26,6 +26,7 @@ class CallFlowAssistant {
         this.currentNodeId = null;
         this.history = [];
         this.historyStates = [];
+        this.nodeBeforeVoicemail = null;
         this.init();
     }
 
@@ -301,6 +302,12 @@ class CallFlowAssistant {
     }
 
     navigateToNode(nodeId) {
+        // Handle return from voicemail
+        if (nodeId === 'return_from_voicemail' && this.nodeBeforeVoicemail) {
+            nodeId = this.nodeBeforeVoicemail;
+            this.nodeBeforeVoicemail = null;
+        }
+        
         // Handle special navigation for promo routing
         if (nodeId === 'check_promo_type') {
             // Route to appropriate promo based on lead type
@@ -371,13 +378,15 @@ class CallFlowAssistant {
         const node = this.callFlowData.nodes[this.currentNodeId];
         
         // Remove previous state classes
-        scriptCard.classList.remove('success', 'reschedule');
+        scriptCard.classList.remove('success', 'reschedule', 'voicemail');
         
         // Add appropriate class based on node type
         if (node.type === 'success') {
             scriptCard.classList.add('success');
         } else if (node.type === 'reschedule') {
             scriptCard.classList.add('reschedule');
+        } else if (node.type === 'voicemail') {
+            scriptCard.classList.add('voicemail');
         }
         
         // Process script with dynamic content
@@ -398,9 +407,10 @@ class CallFlowAssistant {
         script = script.replace(/\{\{CUSTOMER_NAME\}\}/g, this.context.customerName || 'there');
         script = script.replace(/\{\{REP_NAME\}\}/g, this.context.repName);
         
-        // Replace config placeholders (phone number, store name, store location)
+        // Replace config placeholders (phone number, store name, store location, store phone)
         if (this.callFlowData.config) {
             script = script.replace(/\{\{PHONE_NUMBER\}\}/g, this.callFlowData.config.phoneNumber || '[Your Phone Number]');
+            script = script.replace(/\{\{STORE_PHONE\}\}/g, this.callFlowData.config.storePhone || this.callFlowData.config.phoneNumber || '[Store Phone Number]');
             script = script.replace(/\{\{STORE_NAME\}\}/g, this.callFlowData.config.storeName || 'AT&T');
             script = script.replace(/\{\{STORE_LOCATION\}\}/g, this.callFlowData.config.storeLocation || '[Store Location]');
             script = script.replace(/\{\{FIBER_PROMO_PRICE\}\}/g, this.callFlowData.config.fiberPromoPrice || '$29/month');
@@ -521,6 +531,12 @@ class CallFlowAssistant {
         
         const node = this.callFlowData.nodes[this.currentNodeId];
         
+        // Add "Leave Voicemail" button for all non-voicemail nodes
+        if (node.type !== 'voicemail') {
+            const voicemailBtn = this.createVoicemailButton();
+            optionsContainer.appendChild(voicemailBtn);
+        }
+        
         if (!node.options || node.options.length === 0) {
             // NO AUTO-ADVANCE - Show summary screen only for terminal nodes
             if (node.type === 'success' || node.type === 'close') {
@@ -574,6 +590,48 @@ class CallFlowAssistant {
         });
         
         return button;
+    }
+
+    createVoicemailButton() {
+        const button = document.createElement('button');
+        button.className = 'option-btn voicemail-btn';
+        button.textContent = '🎤 Leave Voicemail';
+        
+        // Add animation
+        button.style.opacity = '0';
+        button.style.transform = `translateY(${CallFlowAssistant.BUTTON_ANIMATION_OFFSET}px)`;
+        setTimeout(() => {
+            button.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+            button.style.opacity = '1';
+            button.style.transform = 'translateY(0)';
+        }, 0);
+        
+        button.addEventListener('click', () => {
+            this.handleVoicemailClick();
+        });
+        
+        return button;
+    }
+
+    handleVoicemailClick() {
+        // Save current node to return to later
+        this.nodeBeforeVoicemail = this.currentNodeId;
+        
+        // Determine which voicemail script to show based on lead type
+        let voicemailNode = 'voicemail_universal';
+        if (this.context.leadType === 'fiber' || this.context.leadType === 'both') {
+            voicemailNode = 'voicemail_fiber';
+        } else if (this.context.leadType === 'upgrades' || this.context.leadType === 'vga') {
+            voicemailNode = 'voicemail_upgrades';
+        }
+        
+        // Add visual feedback
+        const buttons = document.querySelectorAll('.option-btn');
+        buttons.forEach(btn => btn.style.opacity = '0.5');
+        
+        setTimeout(() => {
+            this.navigateToNode(voicemailNode);
+        }, CallFlowAssistant.NAVIGATION_DELAY_MS);
     }
 
     handleOptionClick(option) {
@@ -862,20 +920,40 @@ class CallFlowAssistant {
 
     generateVoicemailTemplate(textarea) {
         const customerName = this.context.customerName || 'there';
-        const leadTypeMap = {
-            'wireless': 'wireless service',
-            'fiber': 'fiber internet',
-            'both': 'wireless and fiber services',
-            'upgrades': 'device upgrades',
-            'vga': 'new wireless line opportunities'
-        };
+        const storePhone = this.callFlowData.config?.storePhone || this.callFlowData.config?.phoneNumber || '[Store Phone]';
+        const storeName = this.callFlowData.config?.storeName || 'AT&T';
         
-        const phoneNumber = this.callFlowData.config?.phoneNumber || '[Your Number]';
-        
-        let template = `Hi ${customerName}, this is ${this.context.repName} with AT&T. `;
-        template += `I'm calling about some exclusive offers we have available for ${leadTypeMap[this.context.leadType] || 'AT&T services'}. `;
-        template += `Give me a call back at ${phoneNumber} when you get a chance, or feel free to stop by our store and ask for me. `;
-        template += `Looking forward to talking with you!`;
+        // Determine which template to use based on lead type
+        let template = '';
+        if (this.callFlowData.templates?.voicemailFollowUp) {
+            if (this.context.leadType === 'fiber' || this.context.leadType === 'both') {
+                template = this.callFlowData.templates.voicemailFollowUp.fiber;
+            } else if (this.context.leadType === 'upgrades' || this.context.leadType === 'vga') {
+                template = this.callFlowData.templates.voicemailFollowUp.upgrades;
+            } else {
+                template = this.callFlowData.templates.voicemailFollowUp.universal;
+            }
+            
+            // Replace placeholders
+            template = template.replace(/\{\{CUSTOMER_NAME\}\}/g, customerName);
+            template = template.replace(/\{\{REP_NAME\}\}/g, this.context.repName);
+            template = template.replace(/\{\{STORE_PHONE\}\}/g, storePhone);
+            template = template.replace(/\{\{STORE_NAME\}\}/g, storeName);
+        } else {
+            // Fallback to old template
+            const leadTypeMap = {
+                'wireless': 'wireless service',
+                'fiber': 'fiber internet',
+                'both': 'wireless and fiber services',
+                'upgrades': 'device upgrades',
+                'vga': 'new wireless line opportunities'
+            };
+            
+            template = `Hi ${customerName}, this is ${this.context.repName} with AT&T. `;
+            template += `I'm calling about some exclusive offers we have available for ${leadTypeMap[this.context.leadType] || 'AT&T services'}. `;
+            template += `Give me a call back at ${storePhone} when you get a chance, or feel free to stop by our store and ask for me. `;
+            template += `Looking forward to talking with you!`;
+        }
         
         textarea.value = template;
     }
