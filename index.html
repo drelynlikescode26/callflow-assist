@@ -15,14 +15,20 @@
         
         <!-- Lead Setup Screen -->
         <div id="setupScreen" class="setup-screen">
-            <h2>Lead Setup</h2>
+            <h2>Lead & Rep Setup</h2>
             
             <div class="setup-section">
-                <label class="setup-label">Lead Type</label>
+                <label class="setup-label">Rep Name <span class="required">*</span></label>
+                <input type="text" id="repName" class="text-input" placeholder="Enter your name" required>
+            </div>
+            
+            <div class="setup-section">
+                <label class="setup-label">Lead Type <span class="required">*</span></label>
                 <div class="button-group">
                     <button class="setup-btn" data-lead-type="wireless">Wireless</button>
                     <button class="setup-btn" data-lead-type="fiber">Fiber</button>
                     <button class="setup-btn" data-lead-type="both">Both</button>
+                    <button class="setup-btn" data-lead-type="upgrades">Upgrades</button>
                     <button class="setup-btn" data-lead-type="unknown">Unknown</button>
                 </div>
             </div>
@@ -34,13 +40,20 @@
                 </label>
             </div>
             
-            <div class="setup-section">
-                <label class="setup-label">Upgrade Eligibility</label>
+            <div class="setup-section" id="upgradeTypeSection" style="display: none;">
+                <label class="setup-label">Upgrade Type</label>
                 <div class="button-group">
                     <button class="setup-btn" data-upgrade="iphone">iPhone</button>
                     <button class="setup-btn" data-upgrade="android">Android</button>
                     <button class="setup-btn" data-upgrade="not_sure">Not Sure</button>
                 </div>
+            </div>
+            
+            <div class="setup-section">
+                <label class="setup-label">
+                    <input type="checkbox" id="eventSale" class="toggle-checkbox">
+                    <span class="toggle-label">Event Sale (enables mobile visit option)</span>
+                </label>
             </div>
             
             <div class="setup-section">
@@ -77,10 +90,57 @@
         
         <!-- Summary Screen -->
         <div id="summaryScreen" class="summary-screen hidden">
-            <h2>📋 Call Summary</h2>
-            <div id="summaryContent" class="summary-content">
+            <h2>📋 Call Outcome</h2>
+            
+            <!-- Outcome Selection -->
+            <div id="outcomeSelection" class="outcome-selection">
+                <label class="setup-label">Select Call Outcome</label>
+                <div class="outcome-buttons">
+                    <button class="outcome-btn" data-outcome="booked">✅ Booked Visit</button>
+                    <button class="outcome-btn" data-outcome="callback">📞 Callback Scheduled</button>
+                    <button class="outcome-btn" data-outcome="not_interested">❌ Not Interested</button>
+                    <button class="outcome-btn" data-outcome="no_answer">📵 No Answer</button>
+                    <button class="outcome-btn" data-outcome="voicemail">🎤 Left Voicemail</button>
+                    <button class="outcome-btn" data-outcome="wrong_number">⚠️ Wrong Number</button>
+                </div>
+            </div>
+            
+            <!-- Callback Scheduler (shown when callback outcome selected) -->
+            <div id="callbackScheduler" class="callback-scheduler hidden">
+                <label class="setup-label">Callback Time</label>
+                <div class="button-group">
+                    <button class="setup-btn callback-time-btn" data-callback="later_today">Later Today</button>
+                    <button class="setup-btn callback-time-btn" data-callback="tomorrow">Tomorrow</button>
+                    <button class="setup-btn callback-time-btn" data-callback="weekend">Weekend</button>
+                </div>
+            </div>
+            
+            <!-- Summary Content -->
+            <div id="summaryContent" class="summary-content hidden">
                 <!-- Summary will be populated here -->
             </div>
+            
+            <!-- Copy Templates -->
+            <div id="copyTemplates" class="copy-templates hidden">
+                <div class="template-section">
+                    <label class="template-label">📋 Copy for Salesforce</label>
+                    <textarea id="salesforceSummary" class="copy-textarea" readonly rows="6"></textarea>
+                    <button class="copy-btn" data-copy="salesforce">Copy to Clipboard</button>
+                </div>
+                
+                <div class="template-section" id="appointmentTemplate" style="display: none;">
+                    <label class="template-label">📅 Appointment Confirmation</label>
+                    <textarea id="appointmentText" class="copy-textarea" readonly rows="4"></textarea>
+                    <button class="copy-btn" data-copy="appointment">Copy to Clipboard</button>
+                </div>
+                
+                <div class="template-section" id="voicemailTemplate" style="display: none;">
+                    <label class="template-label">🎤 Voicemail Follow-Up</label>
+                    <textarea id="voicemailText" class="copy-textarea" readonly rows="4"></textarea>
+                    <button class="copy-btn" data-copy="voicemail">Copy to Clipboard</button>
+                </div>
+            </div>
+            
             <div class="summary-actions">
                 <button id="newCallBtn" class="primary-btn">Start New Call</button>
             </div>
