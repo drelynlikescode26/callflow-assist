@@ -15,7 +15,7 @@ body {
 }
 
 .container {
-    max-width: 500px;
+    max-width: 600px;
     width: 100%;
     background: white;
     border-radius: 16px;
@@ -41,7 +41,114 @@ header h1 {
     margin-top: 0.5rem;
 }
 
-main {
+/* Setup Screen Styles */
+.setup-screen {
+    padding: 2rem 1.5rem;
+}
+
+.setup-screen h2 {
+    color: #333;
+    margin-bottom: 1.5rem;
+    font-size: 1.4rem;
+}
+
+.setup-section {
+    margin-bottom: 1.5rem;
+}
+
+.setup-label {
+    display: block;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 0.75rem;
+}
+
+.button-group {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+}
+
+.setup-btn {
+    padding: 0.875rem;
+    font-size: 1rem;
+    border: 2px solid #ddd;
+    background: white;
+    color: #333;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.setup-btn:hover {
+    border-color: #00b4db;
+    color: #00b4db;
+}
+
+.setup-btn.active {
+    background: #00b4db;
+    color: white;
+    border-color: #00b4db;
+}
+
+.toggle-checkbox {
+    width: 20px;
+    height: 20px;
+    margin-right: 0.5rem;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.toggle-label {
+    font-size: 1rem;
+    color: #333;
+    cursor: pointer;
+}
+
+.text-input {
+    width: 100%;
+    padding: 0.875rem;
+    font-size: 1rem;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-family: inherit;
+    transition: border-color 0.2s ease;
+}
+
+.text-input:focus {
+    outline: none;
+    border-color: #00b4db;
+}
+
+.start-call-btn {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    background: #00b4db;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 1rem;
+}
+
+.start-call-btn:hover:not(:disabled) {
+    background: #0083b0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 180, 219, 0.3);
+}
+
+.start-call-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+/* Call Screen Styles */
+.call-screen {
     padding: 1.5rem;
 }
 
@@ -57,23 +164,25 @@ main {
 }
 
 .script-text {
-    font-size: 1.1rem;
+    font-size: 1.15rem;
     line-height: 1.6;
     color: #333;
+    transition: opacity 0.3s ease;
 }
 
 .options-container {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
+    margin-bottom: 1.5rem;
 }
 
 .option-btn {
     background: white;
     border: 2px solid #00b4db;
     color: #00b4db;
-    padding: 0.875rem 1.25rem;
-    font-size: 1rem;
+    padding: 1rem 1.25rem;
+    font-size: 1.05rem;
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -92,14 +201,132 @@ main {
     transform: translateY(0);
 }
 
+/* Notes Section */
+.notes-section {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e9ecef;
+}
+
+.notes-label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #666;
+    margin-bottom: 0.5rem;
+}
+
+.notes-textarea {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 0.95rem;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    font-family: inherit;
+    resize: vertical;
+    transition: border-color 0.2s ease;
+}
+
+.notes-textarea:focus {
+    outline: none;
+    border-color: #00b4db;
+}
+
+/* Summary Screen Styles */
+.summary-screen {
+    padding: 2rem 1.5rem;
+}
+
+.summary-screen h2 {
+    color: #333;
+    margin-bottom: 1.5rem;
+    font-size: 1.4rem;
+}
+
+.summary-content {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+}
+
+.summary-item {
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.summary-item:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.summary-label {
+    font-weight: 600;
+    color: #555;
+    font-size: 0.9rem;
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+.summary-value {
+    color: #333;
+    font-size: 1rem;
+}
+
+.summary-highlight {
+    background: #d4edda;
+    padding: 1rem;
+    border-radius: 6px;
+    border-left: 4px solid #28a745;
+    margin-top: 1rem;
+    font-weight: 500;
+    color: #155724;
+}
+
+.summary-actions {
+    margin-top: 1.5rem;
+}
+
+.primary-btn {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.05rem;
+    font-weight: 600;
+    background: #00b4db;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.primary-btn:hover {
+    background: #0083b0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 180, 219, 0.3);
+}
+
+/* Footer Styles */
 footer {
     padding: 1rem 1.5rem;
     background: #f8f9fa;
     border-top: 1px solid #e9ecef;
 }
 
+.footer-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+
+.footer-buttons .reset-btn:only-child {
+    grid-column: 1 / -1;
+}
+
+.back-btn,
 .reset-btn {
-    width: 100%;
     background: transparent;
     border: 1px solid #6c757d;
     color: #6c757d;
@@ -110,29 +337,15 @@ footer {
     transition: all 0.2s ease;
 }
 
+.back-btn:hover,
 .reset-btn:hover {
     background: #6c757d;
     color: white;
 }
 
-/* Mobile optimizations */
-@media (max-width: 480px) {
-    body {
-        padding: 0.5rem;
-    }
-    
-    header h1 {
-        font-size: 1.25rem;
-    }
-    
-    .script-text {
-        font-size: 1rem;
-    }
-    
-    .option-btn {
-        padding: 0.75rem 1rem;
-        font-size: 0.95rem;
-    }
+/* Utility Classes */
+.hidden {
+    display: none !important;
 }
 
 /* Success state styling */
@@ -145,12 +358,42 @@ footer {
     color: #155724;
 }
 
-/* Callback state styling */
-.script-card.callback {
+/* Reschedule state styling */
+.script-card.reschedule {
     border-left-color: #ffc107;
     background: #fff3cd;
 }
 
-.script-card.callback .script-text {
+.script-card.reschedule .script-text {
     color: #856404;
+}
+
+/* Mobile optimizations */
+@media (max-width: 480px) {
+    body {
+        padding: 0.5rem;
+    }
+    
+    header h1 {
+        font-size: 1.25rem;
+    }
+    
+    .setup-screen,
+    .call-screen,
+    .summary-screen {
+        padding: 1.5rem 1rem;
+    }
+    
+    .script-text {
+        font-size: 1.05rem;
+    }
+    
+    .option-btn {
+        padding: 0.875rem 1rem;
+        font-size: 1rem;
+    }
+    
+    .button-group {
+        grid-template-columns: 1fr;
+    }
 }

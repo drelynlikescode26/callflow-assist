@@ -3,17 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Call Flow Assistant</title>
+    <title>AT&T Call Flow Assistant</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>📞 Call Flow Assistant</h1>
+            <h1>📞 AT&T Call Flow Assistant</h1>
             <div class="progress-indicator" id="progress"></div>
         </header>
         
-        <main>
+        <!-- Lead Setup Screen -->
+        <div id="setupScreen" class="setup-screen">
+            <h2>Lead Setup</h2>
+            
+            <div class="setup-section">
+                <label class="setup-label">Lead Type</label>
+                <div class="button-group">
+                    <button class="setup-btn" data-lead-type="wireless">Wireless</button>
+                    <button class="setup-btn" data-lead-type="fiber">Fiber</button>
+                    <button class="setup-btn" data-lead-type="both">Both</button>
+                    <button class="setup-btn" data-lead-type="unknown">Unknown</button>
+                </div>
+            </div>
+            
+            <div class="setup-section">
+                <label class="setup-label">
+                    <input type="checkbox" id="is55Plus" class="toggle-checkbox">
+                    <span class="toggle-label">Customer is 55+</span>
+                </label>
+            </div>
+            
+            <div class="setup-section">
+                <label class="setup-label">Upgrade Eligibility</label>
+                <div class="button-group">
+                    <button class="setup-btn" data-upgrade="iphone">iPhone</button>
+                    <button class="setup-btn" data-upgrade="android">Android</button>
+                    <button class="setup-btn" data-upgrade="not_sure">Not Sure</button>
+                </div>
+            </div>
+            
+            <div class="setup-section">
+                <label class="setup-label">Customer Name (Optional)</label>
+                <input type="text" id="customerName" class="text-input" placeholder="Enter customer name">
+            </div>
+            
+            <div class="setup-section">
+                <label class="setup-label">Notes (Optional)</label>
+                <textarea id="setupNotes" class="text-input" rows="3" placeholder="Add any pre-call notes..."></textarea>
+            </div>
+            
+            <button id="startCallBtn" class="start-call-btn" disabled>Start Call</button>
+        </div>
+        
+        <!-- Main Call Flow Screen -->
+        <main id="callScreen" class="call-screen hidden">
             <div class="script-card">
                 <div class="script-text" id="scriptText">
                     Loading...
@@ -23,10 +67,30 @@
             <div class="options-container" id="optionsContainer">
                 <!-- Buttons will be dynamically added here -->
             </div>
+            
+            <!-- Persistent Notes Box -->
+            <div class="notes-section">
+                <label class="notes-label">Call Notes</label>
+                <textarea id="callNotes" class="notes-textarea" rows="3" placeholder="Add notes during the call..."></textarea>
+            </div>
         </main>
         
+        <!-- Summary Screen -->
+        <div id="summaryScreen" class="summary-screen hidden">
+            <h2>📋 Call Summary</h2>
+            <div id="summaryContent" class="summary-content">
+                <!-- Summary will be populated here -->
+            </div>
+            <div class="summary-actions">
+                <button id="newCallBtn" class="primary-btn">Start New Call</button>
+            </div>
+        </div>
+        
         <footer>
-            <button class="reset-btn" id="resetBtn">↻ Reset Call</button>
+            <div class="footer-buttons">
+                <button class="back-btn" id="backBtn" style="display: none;">← Back</button>
+                <button class="reset-btn" id="resetBtn">↻ Restart</button>
+            </div>
         </footer>
     </div>
     
