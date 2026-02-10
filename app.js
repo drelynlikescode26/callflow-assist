@@ -261,7 +261,11 @@ class CallFlowAssistant {
             script = script.replace('{{SUMMARY}}', summary);
         }
         
-        // Clean up any remaining placeholders
+        // Clean up any remaining placeholders and warn about them
+        const remainingPlaceholders = script.match(/\{\{[^}]+\}\}/g);
+        if (remainingPlaceholders) {
+            console.warn('Unprocessed placeholders found:', remainingPlaceholders);
+        }
         script = script.replace(/\{\{[^}]+\}\}/g, '').replace(/\s+/g, ' ').trim();
         
         return script;
@@ -289,7 +293,11 @@ class CallFlowAssistant {
         }
         
         if (this.context.upgradeEligible && this.context.upgradeEligible !== 'not_sure') {
-            parts.push(`Upgrade: ${this.context.upgradeEligible.toUpperCase()}`);
+            const upgradeMap = {
+                'iphone': 'iPhone',
+                'android': 'Android'
+            };
+            parts.push(`Upgrade: ${upgradeMap[this.context.upgradeEligible] || this.context.upgradeEligible}`);
         }
         
         return parts.length > 0 ? '\n\n' + parts.join(' | ') : '';
@@ -414,7 +422,7 @@ class CallFlowAssistant {
             ${this.context.upgradeEligible && this.context.upgradeEligible !== 'not_sure' ? `
                 <div class="summary-item">
                     <span class="summary-label">Upgrade Eligibility</span>
-                    <div class="summary-value">${this.context.upgradeEligible.toUpperCase()}</div>
+                    <div class="summary-value">${this.getUpgradeLabel()}</div>
                 </div>
             ` : ''}
             
@@ -442,6 +450,15 @@ class CallFlowAssistant {
             'unknown': 'General Inquiry'
         };
         return labels[this.context.leadType] || 'Unknown';
+    }
+
+    getUpgradeLabel() {
+        const labels = {
+            'iphone': 'iPhone',
+            'android': 'Android',
+            'not_sure': 'Not Sure'
+        };
+        return labels[this.context.upgradeEligible] || this.context.upgradeEligible;
     }
 
     getCallNotes() {
