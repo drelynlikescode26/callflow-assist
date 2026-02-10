@@ -14,3 +14,7 @@ Thumbs.db
 
 # Temporary files
 /tmp/
+
+# Backup files
+*.old
+*.bak
