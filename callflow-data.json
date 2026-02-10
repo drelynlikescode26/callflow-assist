@@ -1,6 +1,7 @@
 {
   "config": {
     "phoneNumber": "[Your Phone Number]",
+    "storePhone": "[Store Phone Number]",
     "storeName": "AT&T on Highway 29",
     "storeLocation": "Highway 29",
     "fiberPromoPrice": "$29/month"
@@ -44,6 +45,11 @@
     },
     "voicemail": {
       "default": "Hi {{CUSTOMER_NAME}}, this is {{REP_NAME}} with AT&T. I'm calling about some exclusive offers available in your area for {{LEAD_TYPE}}. Give me a call back at {{PHONE_NUMBER}} when you get a chance. Looking forward to talking with you!"
+    },
+    "voicemailFollowUp": {
+      "universal": "Hi {{CUSTOMER_NAME}}, this is {{REP_NAME}} with AT&T. I left you a voicemail about new promos/updates on your account. Feel free to call me back at {{STORE_PHONE}} or stop by {{STORE_NAME}} and ask for me. Thanks!",
+      "fiber": "Hi {{CUSTOMER_NAME}}, this is {{REP_NAME}} with AT&T. I left you a voicemail about fiber availability at your address. Call me at {{STORE_PHONE}} or stop by {{STORE_NAME}} and ask for me. Thanks!",
+      "upgrades": "Hi {{CUSTOMER_NAME}}, this is {{REP_NAME}} with AT&T. I left you a voicemail about current equipment promos. Call me at {{STORE_PHONE}} or stop by {{STORE_NAME}} and ask for me. Thanks!"
     }
   },
   "nodes": {
@@ -70,7 +76,7 @@
     },
     "upgrades_vga_promo": {
       "id": "upgrades_vga_promo",
-      "script": "Good afternoon, this is {{REP_NAME}} with {{STORE_NAME}}. I'm calling because you're eligible for our current equipment promos. We have the iPhone 16E as low as $1.99 on upgrades and free with new lines, plus the iPhone Air free on new lines and upgrades. Inventory moves fast, so I wanted to make sure you had a shot before it shifts.",
+      "script": "Good afternoon, this is {{REP_NAME}} with {{STORE_NAME}}. I'm calling because you're eligible for our current equipment promos—some upgrades can be very low cost, and some new lines can qualify for strong device credits. Inventory moves fast, so I wanted to make sure you had a shot before it shifts.",
       "type": "promo",
       "options": [
         {
@@ -367,6 +373,39 @@
           "text": "Not sure yet",
           "next": "lead_specific_pitch",
           "updateContext": {"upgradeType": "not_sure"}
+        }
+      ]
+    },
+    "voicemail_universal": {
+      "id": "voicemail_universal",
+      "script": "Hey {{CUSTOMER_NAME}}, this is {{REP_NAME}} with AT&T on {{STORE_LOCATION}}. Quick heads-up—there are new promos/updates on your account and I wanted to make sure you don't miss them. Call me back at {{STORE_PHONE}} or stop by the store and ask for me. Thanks.",
+      "type": "voicemail",
+      "options": [
+        {
+          "text": "← Return to Call Flow",
+          "next": "return_from_voicemail"
+        }
+      ]
+    },
+    "voicemail_fiber": {
+      "id": "voicemail_fiber",
+      "script": "Hey {{CUSTOMER_NAME}}, this is {{REP_NAME}} with AT&T on {{STORE_LOCATION}}. Your address is now fiber-eligible and I wanted to share the options with you. Call me at {{STORE_PHONE}} or stop by and ask for me. Thanks.",
+      "type": "voicemail",
+      "options": [
+        {
+          "text": "← Return to Call Flow",
+          "next": "return_from_voicemail"
+        }
+      ]
+    },
+    "voicemail_upgrades": {
+      "id": "voicemail_upgrades",
+      "script": "Hey {{CUSTOMER_NAME}}, this is {{REP_NAME}} with AT&T on {{STORE_LOCATION}}. You're eligible for current equipment promos, and inventory can move fast. Call me at {{STORE_PHONE}} or stop by the store and ask for me. Thanks.",
+      "type": "voicemail",
+      "options": [
+        {
+          "text": "← Return to Call Flow",
+          "next": "return_from_voicemail"
         }
       ]
     }

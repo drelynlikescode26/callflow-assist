@@ -377,6 +377,28 @@ footer {
     color: #856404;
 }
 
+/* Voicemail state styling */
+.script-card.voicemail {
+    border-left-color: #9b59b6;
+    background: #f3e5f5;
+}
+
+.script-card.voicemail .script-text {
+    color: #6a1b9a;
+}
+
+/* Voicemail button styling */
+.voicemail-btn {
+    background: #9b59b6 !important;
+    color: white !important;
+    border-color: #9b59b6 !important;
+}
+
+.voicemail-btn:hover {
+    background: #8e44ad !important;
+    color: white !important;
+}
+
 /* Mobile optimizations */
 @media (max-width: 480px) {
     body {
