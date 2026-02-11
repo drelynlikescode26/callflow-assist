@@ -531,8 +531,9 @@ class CallFlowAssistant {
         
         const node = this.callFlowData.nodes[this.currentNodeId];
         
-        // Add "Leave Voicemail" button for all non-voicemail nodes
-        if (node.type !== 'voicemail') {
+        // Add "Leave Voicemail" button only on the start screen
+        const startNodeId = this.callFlowData.startNode || 'permission_check';
+        if (node.type !== 'voicemail' && this.currentNodeId === startNodeId) {
             const voicemailBtn = this.createVoicemailButton();
             optionsContainer.appendChild(voicemailBtn);
         }
